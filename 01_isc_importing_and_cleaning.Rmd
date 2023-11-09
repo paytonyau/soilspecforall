@@ -1,0 +1,172 @@
+---
+title: "Data Analysis with R"
+author: "Your Name"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    number_sections: true
+    theme: cerulean
+    highlight: tango
+    fig_caption: true
+    df_print: kable
+    code_folding: hide
+    code_download: true
+editor_options: 
+  chunk_output_type: console
+---
+
+https://www.alliedscientificpro.com/nirvascan
+NIRvascan Portable Smart Spectrometer (alliedscientificpro.com)
+
+
+# Data cream up and form a matrix
+
+## Load Libraries
+
+We load the necessary libraries. If they are not installed, we install them first.
+
+```{r}
+if(!require(dplyr)){install.packages('dplyr'); require(dplyr)}
+if(!require(tidyr)){install.packages('tidyr'); require(tidyr)}
+if(!require(readr)){install.packages('readr'); require(readr)}
+if(!require(stringr)){install.packages('stringr'); require(stringr)}
+if(!require(tibble)){install.packages('tibble'); require(tibble)}
+```
+
+## Set Folder Path
+
+We set the folder path where our data is located.
+
+```{r}
+dir.p = 'C:/BSSS_project_lowcost_nir/database'
+```
+
+## Import and Merge CSV Files
+
+We import all .csv files from the specified directory and merge them into a single dataframe.
+
+```{r}
+getfiles = list.files(path = paste0(dir.p, "/raw_data/spectra_usa_ge/isc/"),
+                      pattern="_r.csv", 
+                      full.names = T)
+```
+
+## Define Function to Combine CSV Files
+
+We define a function that reads each CSV file and combines the data into a single dataframe.
+
+```{r}
+combineCSVFiles = function(filePaths){
+  combinedData = data.frame() # empty dataframe
+  
+  for (filePath in filePaths){
+    
+    data = read_csv(filePath, id = "path", skip = 28) # read each CSV file
+    
+    combinedData = rbind(combinedData, data) # Combine the data
+  }
+  return(combinedData)
+}
+```
+
+## Use Function to Combine CSV Files
+
+We use the function to combine the CSV files into a single dataframe.
+
+```{r}
+combinedDF = combineCSVFiles(getfiles)
+```
+
+## Check the Final Dataframe
+
+We print and view the final dataframe.
+
+```{r}
+print(combinedDF)
+View(combinedDF)
+```
+
+## Create ID Column
+
+We create an ID column using the named ID during recording spec.
+
+```{r}
+combinedDF <- combinedDF %>%
+  dplyr::mutate(id = str_extract(sub("\\..*$", "", basename(combinedDF$path)),
+                                 "(?<=_)(\\d+)(?=\\_)"))
+
+combinedDF$id = paste("isc", combinedDF$id, sep = "_") # Check if it is necessary or not
+
+combinedDF = combinedDF %>%
+  dplyr::select(c('id'), everything())
+
+combinedDF.ok = combinedDF[, -2]
+colnames(combinedDF.ok)[2:3] = c("wavelength", "reflectance")
+
+View(combinedDF.ok)
+combinedDF.ok[combinedDF.ok$id == c("00000", "00180"),]
+```
+
+## Create a New Column
+
+We create a new column by extracting the numbers after the last comma.
+
+```{r}
+df <- combinedDF.ok %>%
+  mutate(NewColumn = paste0(",", sub(".+,(\\d+)$", "\\1", `reflectance`)))
+
+df$NewColumn = as.numeric(gsub(",", ".", df$NewColumn))
+
+df.ok = df[, -3]
+df.ok[1:10,]
+
+colnames(df.ok)[3] = "reflectance"
+```
+
+## Reshape Dataframe
+
+We reshape the dataframe from long to wide format.
+
+```{r}
+combined.df.ok = df.ok
+
+colnames(combined.df.ok)
+combinedDF.wide = tidyr::spread(combined.df.ok,
+                                key = "id",
+                                value = "reflectance")
+
+row_names <- colnames(combinedDF.wide)[-1]
+
+transposed_tibble <- as_tibble(t(as.matrix(combinedDF.wide)))
+
+colnames(transposed_tibble) = transposed_tibble[1,]
+transposed_tibble[2:5, c(1:4, ncol(transposed_tibble))]
+
+combined.df.org = transposed_tibble[-1, ]
+combined.df.org[1:5, c(1:5, ncol(combined.df.org))]
+combined.df.org$id = row_names
+
+combined.df.org = combined.df.org %>%
+  select(id, everything())
+
+combined.df.org[1:5, c(1:5, ncol(combined.df.org))]
+```
+
+## Export Dataframe
+
+We export the final dataframe to a CSV file.
+
+```{r}
+write.csv(combined.df.org, paste0(dir.p, "/raw_data/spectra_usa_ge/isc/combinedSpec.csv"))
+```
+
+## Save R Environment
+
+We save the R environment for future use.
+
+```{r}
+save.image(paste0(dir.p, "/r_code/isc_importing_and_cleaning.RData"))
+```
