@@ -8,6 +8,19 @@ In this context, we are working on a mathematical function to normalise the spec
 
 This approach will facilitate more efficient, regular, and current soil information on soil properties at affordable costs. It will aid in the implementation of policies for sustainable agriculture and natural resource management.
 
+**Table of contents**
+
+(1A) [Importing and claning.R](https://github.com/paytonyau/soilspecforall/blob/main/01_isc_importing_and_cleaning.R)
+(1B) [Importing and claning - Rmarkdown](https://github.com/paytonyau/soilspecforall/blob/main/01_isc_importing_and_cleaning.Rmd)
+(2A) [transfer_asd_to_isc_nir.R](https://github.com/paytonyau/soilspecforall/blob/main/02_transfer_asd_to_isc_nir.R)
+(2B)[transfer_asd_to_isc_nir - Rmarkdown](https://github.com/paytonyau/soilspecforall/blob/main/02_transfer_asd_to_isc_nir.Rmd)
+(3A)[proj_low_cost_nir_modelling.R](https://github.com/paytonyau/soilspecforall/blob/main/03_proj_low_cost_nir_modelling.R)
+(3B)[proj_low_cost_nir_modelling - Rmarkdown](https://github.com/paytonyau/soilspecforall/blob/main/03_proj_low_cost_nir_modelling.Rmd)
+(4A)[modelling_all_free_asd_library.R](https://github.com/paytonyau/soilspecforall/blob/main/04_modelling_all_free_asd_library.R)
+(4B)[modelling_all_free_asd_library - Rmarkdown](https://github.com/paytonyau/soilspecforall/blob/main/04_modelling_all_free_asd_library.Rmd)
+(5)[Quick graphs.R](https://github.com/paytonyau/soilspecforall/blob/main/05_quick_graphs.R)
+
+
 **References**
 (1) [Preparing a soil spectral library using the Internal Soil Standard (ISS) method: Influence of extreme different humidity laboratory conditions - ScienceDirect](https://www.sciencedirect.com/science/article/pii/S0016706118323619)
 (2) [Reflectance measurements of soils in the laboratory: Standards and protocols - ScienceDirect](https://www.sciencedirect.com/science/article/pii/S0016706115000038)
