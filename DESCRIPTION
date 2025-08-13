@@ -1,0 +1,40 @@
+Package: SoilSpec4All
+Type: Package
+Title: A Feasible and Low-Cost Approach for Environmentally Sustainable
+    Analysis of Soils in Agriculture
+Version: 0.1.0
+Author: Payton Yau [aut, cre]
+Maintainer: Payton Yau <tungon@gmail.com>
+Description: Provides a complete suite of functions to normalize spectral data
+    between a low-cost, portable spectrometer (ISC NIRvascan) and a
+    high-end, laboratory instrument (ASD AgriSpec). This package implements
+    a full workflow including data import, cleaning, pre-processing
+    (splice correction, smoothing, resampling, SNV), spectral transfer
+    (PDS, Subtraction), and machine learning model training (PLSR, Cubist)
+    to accurately predict soil properties such as Total Organic Carbon (TOC),
+    Total Nitrogen (TN), and pH.
+License: MIT + file LICENSE
+URL: https://github.com/paytonyau/SoilSpec4All
+BugReports: https://github.com/paytonyau/SoilSpec4All/issues
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    dplyr,
+    magrittr,
+    prospectr,
+    caret,
+    pls,
+    rlang,
+    clhs,
+    resemble,
+    readr,
+    purrr,
+    stringr,
+    tools
+Suggests:
+    ggplot2,
+    ggridges,
+    patchwork,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+RoxygenNote: 7.3.2
